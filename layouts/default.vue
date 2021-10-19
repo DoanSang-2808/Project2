@@ -90,7 +90,7 @@
                   <v-img
                     max-height="34"
                     max-width="92"
-                    src="	http://localhost:8080/img/logo-full.3f18e7ec.png"
+                    src="http://localhost:8080/img/logo-full.3f18e7ec.png"
                   ></v-img>
                 </NuxtLink>
               </v-col>
@@ -108,7 +108,7 @@
                 </NuxtLink>
               </v-col>
               <v-col cols="2" class="d-flex align-center item-hover hidden"
-                ><NuxtLink to="/type/movie"
+                ><NuxtLink to="/type/movies"
                   ><p class="mb-0 text-white">Phim lẻ</p></NuxtLink
                 ></v-col
               >
@@ -136,7 +136,7 @@
       </v-container>
     </v-app-bar>
     <v-main :class="{ backgroundImg: $store.state.bgImg }">
-      <v-container class="h-full">
+      <v-container :fluid="fluid" class="h-full">
         <Nuxt />
       </v-container>
     </v-main>
@@ -157,7 +157,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer> -->
-    <v-footer app>
+    <v-footer app class="z-20">
       <span>&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
   </v-app>
@@ -168,6 +168,10 @@ import '@fortawesome/fontawesome-free/css/all.css'
 import Button from '../components/Button.vue'
 export default {
   components: { Button },
+  asyncData() {
+    const logo = '	http://localhost:8080/img/logo-full.3f18e7ec.png';
+    return logo;
+  },
   data() {
     return {
       clipped: false,
@@ -189,6 +193,7 @@ export default {
       right: true,
       rightDrawer: false,
       title: 'Vuetify.js',
+      fluid: true,
     }
   },
   created() {

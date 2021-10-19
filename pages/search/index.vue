@@ -23,9 +23,10 @@
             max-height="100%"
             max-width="100%"
             contain
+            @click="clickDetailMovie(movie._id)"
           ></v-img>
-          <h3 class="mt-4 text-lg hover-under-line">{{ movie.movienamevn }}</h3>
-          <h3 class="hover-under-line">{{ movie.moviename }}</h3>
+          <h3 class="mt-4 text-lg hover-under-line" @click="clickDetailMovie(movie._id)">{{ movie.movienamevn }}</h3>
+          <h3 class="hover-under-line" @click="clickDetailMovie(movie._id)">{{ movie.moviename }}</h3>
         </v-col>
       </v-row>
     </v-container>
@@ -65,6 +66,15 @@ export default {
           console.log(error)
         })
     },
+  },
+  methods: {
+    /**
+     * Hàm bắt sự kiện khi click xem detail phim
+     * Author: DTSang(19/10)
+     */
+    clickDetailMovie(idmovie) {
+      this.$router.push({ path: `/type/movies/${idmovie}`, params: { id: idmovie } })
+    }
   },
 }
 </script>

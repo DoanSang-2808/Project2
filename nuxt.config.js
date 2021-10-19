@@ -13,7 +13,10 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+    ],
+    script: [
+      { src:"https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v12.0&appId=881102469192451&autoLogAppEvents=1"}
+     ]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
