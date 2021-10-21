@@ -64,11 +64,14 @@
               max-height="100%"
               max-width="100%"
               contain
+              @click="clickDetailMovie(movie._id)"
             ></v-img>
-            <h3 class="mt-4 text-lg hover-under-line">
+            <h3 class="mt-4 text-lg hover-under-line" @click="clickDetailMovie(movie._id)">
               {{ movie.movienamevn }}
             </h3>
-            <h3 class="hover-under-line">{{ movie.moviename }}</h3>
+            <h3 class="hover-under-line" @click="clickDetailMovie(movie._id)">
+              {{ movie.moviename }}
+            </h3>
           </v-col>
         </v-row>
       </v-container>
@@ -118,38 +121,50 @@ export default {
      * Author: DTSang(21/09)
      */
     typeMovie() {
-      this.loadMovie();
+      this.loadMovie()
     },
     nationalMovie() {
-      this.loadMovie();
+      this.loadMovie()
     },
-    year(){
-      this.loadMovie();
+    year() {
+      this.loadMovie()
     },
   },
-  created () {
-    this.loadMovie();
+  created() {
+    this.loadMovie()
   },
   methods: {
+    /**
+     * Hàm load dữ liệu phim lẻ
+     * Auhtor: DTSang(17/10)
+     */
     loadMovie() {
-      const self = this;
-      axios.get(`${process.env.baseUrl}/filter`, {
-        params: {
-          pageIndex: this.pageIndex,
-          pageSize: 8,
-          typemovie: this.typeMovie,
-          national: this.nationalMovie,
-          year: this.year,
-        },
-      })
-      .then((response) => {
-        // self.totalMovie = response.data.totalMovie
-        // self.totalPage = response.data.totalPage
-        self.movies = response.data.movies
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+      const self = this
+      axios
+        .get(`${process.env.baseUrl}/filter`, {
+          params: {
+            pageIndex: this.pageIndex,
+            pageSize: 8,
+            typemovie: this.typeMovie,
+            national: this.nationalMovie,
+            year: this.year,
+          },
+        })
+        .then((response) => {
+          // self.totalMovie = response.data.totalMovie
+          // self.totalPage = response.data.totalPage
+          self.movies = response.data.movies
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    /**
+     * Hàm bắt sự kiện click vào xem detail movie
+     * Author: DTSang(18/10)
+     */
+    clickDetailMovie(idmovie) {
+      this.$router.push({ path: `movies/${idmovie}`, params: { id: idmovie } })
     },
   },
 }
