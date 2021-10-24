@@ -182,25 +182,25 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from 'axios';
 export default {
   middleware: 'home',
   async asyncData() {
-    const typeMovie = await axios.get(`${process.env.baseUrl}/gettypemovie`)
+    const typeMovie = await axios.get(`${process.env.baseUrl}/gettypemovie`);
     const nationalMovie = await axios.get(
       `${process.env.baseUrl}/getnationalmovie`
-    )
+    );
     const movies = await axios.get(`${process.env.baseUrl}/filter`, {
       params: {
         pageIndex: 1,
         pageSize: 8,
       },
-    })
+    });
     return {
       typeMovies: typeMovie.data,
       nationalMovies: nationalMovie.data,
       movies: movies.data.movies,
-    }
+    };
   },
   data: () => ({
     years: ['2021', '2020', '2019', '2018', '2017', '2016'],

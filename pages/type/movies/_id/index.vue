@@ -106,16 +106,16 @@
 </template>
 
 <script>
-import axios from 'axios'
-import Button from '../../../../components/Button.vue'
+import axios from 'axios';
+import Button from '../../../../components/Button.vue';
 export default {
   components: { Button },
   middleware: 'type-movie-id',
   async asyncData({ params }) {
     const response = await axios.get(
       `${process.env.baseUrl}/getmovie/${params.id}`
-    )
-    return { movie: response.data }
+    );
+    return { movie: response.data };
   },
   data() {
     return {
@@ -128,7 +128,7 @@ export default {
      *Author: DTSang(19/10)
      */
     playTrailerVideo() {
-      this.showVideo = true
+      this.showVideo = true;
     },
   },
 }

@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from 'axios';
 export default {
   data: () => ({
     account: {
@@ -103,21 +103,21 @@ export default {
 
   methods: {
     submit() {
-      this.$refs.observer.validate()
+      this.$refs.observer.validate();
     },
     clear() {
-      this.email = ''
-      this.password = ''
-      this.checkbox = null
-      this.$refs.observer.reset()
+      this.email = '';
+      this.password = '';
+      this.checkbox = null;
+      this.$refs.observer.reset();
     },
     /**
      * Sự kiện click đăng nhập
      * Author: DTsang(15/10)
      */
     btnLoginOnclick() {
-      const value = this.account
-      const self = this
+      const value = this.account;
+      const self = this;
       axios
         .post(`${process.env.baseUrl}/login`, value)
         .then((response) => {
@@ -131,21 +131,20 @@ export default {
             id: response.data._id,
             role: response.data.role,
             token: response.data.token,
+            dob: response.data.dob,
           };
           this.$cookies.set('Account', account);
           this.changeIsLogin();
           if (response.data.role === 'guest') {
-            self.$router.push({ path: "/home"})
-          } 
-          // else {
-          //   self.$router.push({ name: 'MovieCMS' })
-          // }
-          // self.changeIsShow()
+            self.$router.push({ path: "/home"});
+          } else {
+            self.$router.push({ path: "/admin" })
+          }
         })
         .catch((error) => {
-          self.snackbar = true
-          self.textSnackbar = error.response.data.notification
-          self.color = '#E53935'
+          self.snackbar = true;
+          self.textSnackbar = error.response.data.notification;
+          self.color = '#E53935';
         })
     },
     /**
@@ -163,7 +162,7 @@ export default {
      * Author: DTSang(16/10)
      */
     changeRmbLogin() {
-      this.$store.dispatch("handleChangeRmbLogin", this.checkbox)
+      this.$store.dispatch("handleChangeRmbLogin", this.checkbox);
     },
   },
 }

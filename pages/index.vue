@@ -12,7 +12,7 @@
 
 <script>
   export default {
-    middleware: 'index'
+    middleware: 'index',
   }
 </script>
 <style scoped>

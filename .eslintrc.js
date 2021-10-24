@@ -18,5 +18,8 @@ module.exports = {
   // add your custom rules here
   rules: {
     'no-console': 'off',
-},
+    "vue/valid-v-slot": ["error", { "allowModifiers": true }],
+    "import/no-named-as-default": 0,
+  },
+  
 }

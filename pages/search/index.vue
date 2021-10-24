@@ -53,17 +53,17 @@ export default {
      */
     keyword() {
       if (this.keyword === '') {
-        this.show = false
+        this.show = false;
       } else {
-        this.show = true
+        this.show = true;
       }
       axios
         .get(`${process.env.baseUrl}/findmovie?key=${this.keyword}`)
         .then((response) => {
-          this.movies = response.data
+          this.movies = response.data;
         })
         .catch((error) => {
-          console.log(error)
+          console.log(error);
         })
     },
   },
@@ -73,7 +73,7 @@ export default {
      * Author: DTSang(19/10)
      */
     clickDetailMovie(idmovie) {
-      this.$router.push({ path: `/type/movies/${idmovie}`, params: { id: idmovie } })
+      this.$router.push({ path: `/type/movies/${idmovie}`, params: { id: idmovie } });
     }
   },
 }
