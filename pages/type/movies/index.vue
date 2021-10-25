@@ -85,24 +85,14 @@ import axios from 'axios'
 export default {
   middleware: 'type-movie',
   async asyncData() {
-    const typeMovie = await axios.get(`${process.env.baseUrl}/gettypemovie`)
+    const typeMovie = await axios.get(`${process.env.baseUrl}/gettypemovie`);
     const nationalMovie = await axios.get(
       `${process.env.baseUrl}/getnationalmovie`
-    )
-    // const movies = await axios.get(`${process.env.baseUrl}/filter`, {
-    //   params: {
-    //     pageIndex: 1,
-    //     pageSize: 8,
-    //     // typemovie: typeMovie,
-    //     // national: nationalMovie,
-    //     // year: year,
-    //   },
-    // })
+    );
     return {
       typeMovies: typeMovie.data,
       nationalMovies: nationalMovie.data,
-      //   movies: movies.data.movies,
-    }
+    };
   },
   data: () => ({
     years: ['2021', '2020', '2019', '2018', '2017', '2016'],
@@ -121,17 +111,17 @@ export default {
      * Author: DTSang(21/09)
      */
     typeMovie() {
-      this.loadMovie()
+      this.loadMovie();
     },
     nationalMovie() {
-      this.loadMovie()
+      this.loadMovie();
     },
     year() {
-      this.loadMovie()
+      this.loadMovie();
     },
   },
   created() {
-    this.loadMovie()
+    this.loadMovie();
   },
   methods: {
     /**
@@ -153,10 +143,10 @@ export default {
         .then((response) => {
           // self.totalMovie = response.data.totalMovie
           // self.totalPage = response.data.totalPage
-          self.movies = response.data.movies
+          self.movies = response.data.movies;
         })
         .catch((error) => {
-          console.log(error)
+          console.log(error);
         })
     },
     /**
@@ -164,7 +154,7 @@ export default {
      * Author: DTSang(18/10)
      */
     clickDetailMovie(idmovie) {
-      this.$router.push({ path: `movies/${idmovie}`, params: { id: idmovie } })
+      this.$router.push({ path: `movies/${idmovie}`, params: { id: idmovie } });
     },
   },
 }

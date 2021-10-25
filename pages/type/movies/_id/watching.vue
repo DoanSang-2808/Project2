@@ -30,14 +30,14 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from 'axios';
 export default {
   middleware: 'watching',
   async asyncData({ params }) {
     const response = await axios.get(
       `${process.env.baseUrl}/getmovie/${params.id}`
-    )
-    return { movie: response.data }
+    );
+    return { movie: response.data };
   },
   data() {
     return {
@@ -46,10 +46,10 @@ export default {
     }
   },
   created() {
-    this.loadMovie()
+    this.loadMovie();
   },
   mounted() {
-    window.FB.XFBML.parse()
+    window.FB.XFBML.parse();
   },
   methods: {
     /**
@@ -62,10 +62,10 @@ export default {
         axios
           .get(`${process.env.VUE_APP_ROOT_API}/getmovie/${this.id}`)
           .then((response) => {
-            self.movie = response.data
+            self.movie = response.data;
           })
           .catch((error) => {
-            console.log(error)
+            console.log(error);
           })
       }
     },

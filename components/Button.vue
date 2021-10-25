@@ -1,11 +1,5 @@
 <template>
-  <v-btn
-    class="red darken-3"
-    type="button"
-    @click="
-      btnOnclick
-    "
-  >
+  <v-btn class="red darken-3" type="button" @click="btnOnclick">
     {{ text }}
   </v-btn>
 </template>
@@ -15,17 +9,17 @@ export default {
   props: {
     text: {
       type: String,
-      default: "",
+      default: '',
     },
   },
   methods: {
-      /**
-       * Sự kiện click vào button
-       * Autho: DTSang(15/10)
-       */
-      btnOnclick() {
-          this.$emit("btnOnclick")
-      }
-  }
+    /**
+     * Sự kiện click vào button
+     * Autho: DTSang(15/10)
+     */
+    btnOnclick() {
+      this.$emit('btnOnclick')
+    },
+  },
 }
 </script>
