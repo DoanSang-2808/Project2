@@ -1,7 +1,7 @@
 <template>
   <v-overlay absolute="absolute">
     <div class="bg-gray-900 p-8 rounded">
-      <h1 class="text-3xl font-bold mb-4">Đăng nhập</h1>
+      <h1 class="text-3xl font-bold mb-4">{{ $t('button.login') }}</h1>
       <validation-observer ref="observer" v-slot="{ invalid }">
         <form @submit.prevent="submit">
           <validation-provider
@@ -57,7 +57,7 @@
             :disabled="invalid"
             @click="btnLoginOnclick"
           >
-            Đăng nhập
+            {{ $t('button.login') }}
           </v-btn>
           <v-snackbar
             v-model="snackbar"
@@ -78,7 +78,7 @@
               </v-btn>
             </template>
           </v-snackbar>
-          <v-btn @click="clear"> clear </v-btn>
+          <v-btn @click="clear"> {{ $t('button.clear') }} </v-btn>
         </form>
       </validation-observer>
     </div>
@@ -88,6 +88,7 @@
 <script>
 import axios from 'axios';
 export default {
+  middleware: 'login-register',
   data: () => ({
     account: {
       email: '',
@@ -105,9 +106,13 @@ export default {
     submit() {
       this.$refs.observer.validate();
     },
+    /**
+     * Hàm reset lại form và xóa errors của các text-feild
+     * Author: DTSang(25/10)
+     */
     clear() {
-      this.email = '';
-      this.password = '';
+      this.account.email = '';
+      this.account.password = '';
       this.checkbox = null;
       this.$refs.observer.reset();
     },

@@ -76,7 +76,7 @@
         </v-row>
       </v-container>
     </div>
-    <v-pagination v-model="page" :length="15" :total-visible="7"></v-pagination>
+    <v-pagination v-model="pageIndex" :length="totalPage" ></v-pagination>
   </div>
 </template>
 
@@ -102,12 +102,12 @@ export default {
     nationalMovie: '',
     typeMovie: '',
     pageIndex: 1,
+    totalPage: 0,
     movies: [],
-    page: 1,
   }),
   watch: {
     /**
-     * Lắng nghe sựu thay đổi của typeMovie, nationalMovie, yearMovie
+     * Lắng nghe sựu thay đổi của typeMovie, nationalMovie, yearMovie, pageIndex
      * Author: DTSang(21/09)
      */
     typeMovie() {
@@ -119,6 +119,9 @@ export default {
     year() {
       this.loadMovie();
     },
+    pageIndex() {
+      this.loadMovie();
+    }
   },
   created() {
     this.loadMovie();
@@ -144,6 +147,7 @@ export default {
           // self.totalMovie = response.data.totalMovie
           // self.totalPage = response.data.totalPage
           self.movies = response.data.movies;
+          self.totalPage = response.data.totalPage;
         })
         .catch((error) => {
           console.log(error);

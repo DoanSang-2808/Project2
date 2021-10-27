@@ -1,6 +1,6 @@
 import colors from 'vuetify/es5/util/colors'
 
-export default {
+export default{
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - project2',
@@ -15,8 +15,8 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ],
     script: [
-      { src:"https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v12.0&appId=881102469192451&autoLogAppEvents=1"}
-     ]
+      { src: "https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v12.0&appId=881102469192451&autoLogAppEvents=1" }
+    ]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -27,6 +27,7 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '~/plugins/vee-validate.js',
+    //'~/plugins/i18n.js'
   ],
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -55,6 +56,7 @@ export default {
 
     // With options
     ['cookie-universal-nuxt', { alias: 'cookiz' }],
+    '@nuxtjs/i18n',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -95,5 +97,16 @@ export default {
   },
   env: {
     baseUrl: process.env.BASE_URL || 'https://apiwebmovie.herokuapp.com'
+  },
+  i18n: {
+    langDir: '~/locales/',
+    locales: [
+      { code: 'en', iso: 'en-US', file: 'en.js', name: 'English' },
+      { code: 'vi', iso: 'vi-VN', file: 'vi.js', name: 'Tiếng Việt' },
+    ],
+    defaultLocale: 'en',
+    vueI18n: {
+      fallbackLocale: ['en', 'vi'],
+    }
   }
 }

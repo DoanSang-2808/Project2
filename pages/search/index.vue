@@ -30,7 +30,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-pagination v-model="page" :length="15" :total-visible="7"></v-pagination>
+    <v-pagination v-model="pageIndex" :length="totalPage"></v-pagination>
   </div>
 </template>
 
@@ -43,7 +43,8 @@ export default {
       keyword: '',
       show: false,
       movies: [],
-      page: 1,  
+      pageIndex: 1,  
+      totalPage: 0,
     }
   },
   watch: {
@@ -57,10 +58,40 @@ export default {
       } else {
         this.show = true;
       }
+      const self = this;
       axios
-        .get(`${process.env.baseUrl}/findmovie?key=${this.keyword}`)
+        .get(`${process.env.baseUrl}/searchmovie`, {
+          params: {
+            pageIndex: self.pageIndex,
+            pageSize: 8,
+            key: self.keyword,
+          },
+        })
         .then((response) => {
-          this.movies = response.data;
+          this.movies = response.data.movies;
+          self.totalPage = response.data.totalPage;
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+    },
+    /**
+     * Hàm lắng nghe pageIndex thay đổi
+     * Author: DTSang(25/10)
+     */
+    pageIndex() {
+      const self = this;
+      axios
+        .get(`${process.env.baseUrl}/searchmovie`, {
+          params: {
+            pageIndex: self.pageIndex,
+            pageSize: 8,
+            key: self.keyword,
+          },
+        })
+        .then((response) => {
+          this.movies = response.data.movies;
+          self.totalPage = response.data.totalPage;
         })
         .catch((error) => {
           console.log(error);

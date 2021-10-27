@@ -5,6 +5,7 @@ const createStore = () => {
       isLogin: "",
       rmbLogin: "",
       bgImg: true,
+      fluid: false,
     },
     getters: {
       // Here we will create getter
@@ -16,6 +17,9 @@ const createStore = () => {
       },
       getBgImg: state => {
         return state.bgImg;
+      },
+      getFluid: state => {
+        return state.fluid;
       }
     },
     mutations: {
@@ -28,7 +32,10 @@ const createStore = () => {
       },
       changeBgImg(state, newBgImg) {
         state.bgImg = newBgImg;
-      }
+      },
+      changeFluid(state, newFluid) {
+        state.fluid = newFluid;
+      },
     },
     actions: {
       // Here we will creta action
@@ -40,7 +47,10 @@ const createStore = () => {
       },
       handleChangeBgImg(context, newBgImg) {
         context.commit("changeBgImg", newBgImg);
-      }
+      },
+      handleChangeFluid( context, newFluid) {
+        context.commit("changeFluid", newFluid);
+      },
     },
   })
 }
