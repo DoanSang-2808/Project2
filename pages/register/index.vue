@@ -1,7 +1,7 @@
 <template>
   <v-overlay absolute="absolute">
     <div class="bg-gray-900 p-8 rounded">
-      <h1 class="text-3xl font-bold mb-4">Đăng kí</h1>
+      <h1 class="text-3xl font-bold mb-4">{{ $t('button.register') }}</h1>
       <validation-observer ref="observer" v-slot="{ invalid }">
         <form @submit.prevent="submit">
           <validation-provider
@@ -120,7 +120,7 @@
             :disabled="invalid"
             @click="btnRegisterOnclick"
           >
-            Đăng kí
+            {{ $t('button.register') }}
           </v-btn>
           <v-snackbar
             v-model="snackbar"
@@ -141,7 +141,7 @@
               </v-btn>
             </template>
           </v-snackbar>
-          <v-btn @click="clear"> clear </v-btn>
+          <v-btn @click="clear"> {{ $t('button.clear') }} </v-btn>
         </form>
       </validation-observer>
     </div>
@@ -149,8 +149,9 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from 'axios'
 export default {
+  middleware: 'login-register',
   data: () => ({
     cfpassword: '',
     date: '',
@@ -172,30 +173,42 @@ export default {
       return this.formatDate(this.date)
     },
   },
-  watch: {
-    date() {
-      const dob = new Date(this.date).getTime()
-      console.log(dob)
-    },
-  },
+  watch: {},
   methods: {
     submit() {
       this.$refs.observer.validate()
     },
+    /**
+     * Hàm reset lại form và xóa errors của các text-feild
+     * Author: DTSang(25/10)
+     */
     clear() {
-      this.username = ''
-      this.phoneNumber = ''
-      this.email = ''
-      this.password = ''
+      this.account.username = ''
+      this.account.phone = ''
+      this.account.email = ''
+      this.date = ''
+      this.account.password = ''
       this.cfpassword = ''
       this.$refs.observer.reset()
     },
+    /**
+     * Hàm định dạng hiển thị của Ngày sinh
+     * Author; DTSang(25/10)
+     */
     formatDate(date) {
       if (!date) return null
       const [year, month, day] = date.split('-')
       return `${day}/${month}/${year}`
     },
+    /**
+     * Hàm giới hạn những giá trị ngày có thể chọn
+     * Author: DTSang(25/10)
+     */
     allowedDates: (val) => new Date(val).getTime() <= new Date().getTime(),
+    /**
+     * Hàm bắt sự kiện khi click vào nút đăng kí tài khoản
+     * Author: DTSang(25/10)
+     */
     btnRegisterOnclick() {
       this.account.dob = new Date(this.date).getTime().toString()
       if (this.cfpassword !== this.account.password) {
@@ -208,15 +221,15 @@ export default {
         axios
           .post(`${process.env.baseUrl}/register`, value)
           .then(() => {
-            self.snackbar = true;
-            self.textSnackbar = 'Đăng nhập thành công';
-            self.color = '#43A047';
-            self.$router.push({ path: '/login' });
+            self.snackbar = true
+            self.textSnackbar = 'Đăng nhập thành công'
+            self.color = '#43A047'
+            self.$router.push({ path: '/login' })
           })
           .catch((error) => {
-            self.snackbar = true;
-            self.textSnackbar = error.response.data.error;
-            self.color = '#E53935';
+            self.snackbar = true
+            self.textSnackbar = error.response.data.error
+            self.color = '#E53935'
           })
       }
     },

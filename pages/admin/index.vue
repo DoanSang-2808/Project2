@@ -195,76 +195,101 @@
 </template>
 
 <script>
-import axios from 'axios';
-import Button from '../../components/Button.vue';
+import axios from 'axios'
+import Button from '../../components/Button.vue'
 export default {
   components: { Button },
-  middleware: 'home',
+  middleware: 'admin',
   async asyncData() {
-    const typeMovie = await axios.get(`${process.env.baseUrl}/gettypemovie`);
+    const typeMovie = await axios.get(`${process.env.baseUrl}/gettypemovie`)
     const nationalMovie = await axios.get(
       `${process.env.baseUrl}/getnationalmovie`
-    );
+    )
     return {
       typeMovie: typeMovie.data,
       nationalMovie: nationalMovie.data,
     }
   },
-  data: () => ({
-    dialog: false,
-    dialogDelete: false,
-    headers: [
-      {
-        text: 'Tên phim',
-        align: 'start',
-        value: 'moviename',
-      },
-      { text: 'Năm', value: 'year' },
-      { text: 'Thời lượng', value: 'timeduration' },
-      { text: 'Quốc gia', value: 'national' },
-      { text: 'Thể loại', value: 'typemovie' },
-      { text: 'Đạo diễn', value: 'director' },
-      { text: 'Diễn viên', value: 'actors' },
-      { text: 'Actions', value: 'actions' },
-    ],
-    movies: [],
-    editedIndex: -1,
-    years: ['2021', '2020', '2019', '2018', '2017', '2016'],
-    movie: {},
-    idMovie: '',
-    imagelink: '',
-    image: '',
-    imagebackgroundlink: '',
-    imagebackground: '',
-    token: "",
-    keywork: '',
-  }),
+  data() {
+    return {
+      dialog: false,
+      dialogDelete: false,
+      headers: [
+        {
+          text: 'Tên phim',
+          align: 'start',
+          value: 'moviename',
+        },
+        { text: 'Năm', value: 'year' },
+        { text: 'Thời lượng', value: 'timeduration' },
+        { text: 'Quốc gia', value: 'national' },
+        { text: 'Thể loại', value: 'typemovie' },
+        { text: 'Đạo diễn', value: 'director' },
+        { text: 'Diễn viên', value: 'actors' },
+        { text: 'Actions', value: 'actions' },
+      ],
+      movies: [],
+      editedIndex: -1,
+      years: ['2021', '2020', '2019', '2018', '2017', '2016'],
+      movie: {},
+      idMovie: '',
+      imagelink: '',
+      image: '',
+      imagebackgroundlink: '',
+      imagebackground: '',
+      token: this.$cookies.get('Account').token,
+      keyword: '',
+    }
+  },
 
   computed: {
+    /**
+     * Cập nhật lại tiêu đề của Form khi edidtedIndex thay đổi
+     * Author: DTSang(25/10)
+     */
     formTitle() {
       return this.editedIndex === -1 ? 'New Film' : 'Edit Film'
     },
   },
-
   watch: {
+    /**
+     * Lắng nghe sự kiện của dialog
+     * Author: DTSang(25/10)
+     */
     dialog(val) {
-      val || this.close();
+      val || this.close()
     },
+    /**
+     * Lắng nghe sự thay đổi của dialog delete
+     * Author: DTSang(25/10)
+     */
     dialogDelete(val) {
-      val || this.closeDelete();
+      val || this.closeDelete()
     },
-    keywork() {
-      this.findMovie(this.keywork);
-    }
+    /**
+     * Lắng nghe sự thay đổi của keyword
+     * Author: DTsang(25/10)
+     */
+    keyword() {
+      if (this.keyword !== '') {
+        this.findMovie()
+      } else {
+        this.initialize()
+      }
+    },
   },
 
   created() {
-    this.initialize();
+    this.initialize()
   },
-
   methods: {
+    /**
+     * Hàm khở tạo dữ liệu loadMovie
+     * Author: DTSang(25/10)
+     */
     initialize() {
-      const self = this;
+      this.keyword = ''
+      const self = this
       axios
         .get(`${process.env.baseUrl}/filter`, {
           params: {
@@ -276,10 +301,10 @@ export default {
           },
         })
         .then((response) => {
-          self.movies = response.data.movies;
+          self.movies = response.data.movies
         })
         .catch((error) => {
-          console.log(error);
+          console.log(error)
         })
     },
     /**
@@ -287,26 +312,26 @@ export default {
      * Author: DTSang(22/10)
      */
     addFilm() {
-      this.dialog = true;
+      this.dialog = true
     },
     /**
      * Hàm bắt sự kiện khi click btn sửa phim
      * Auhtor: DTSang(22/10)
      */
     editFilm(id) {
-      this.editedIndex = 1;
-      const self = this;
+      this.editedIndex = 1
+      const self = this
       axios
         .get(`${process.env.baseUrl}/getmovie/${id}`)
         .then((response) => {
-          self.movie = response.data;
-          self.dialog = true;
-          self.idMovie = id;
-          self.image = this.movie.imagelink;
-          self.imagebackground = this.movie.imagebackgroundlink;
+          self.movie = response.data
+          self.dialog = true
+          self.idMovie = id
+          self.image = this.movie.imagelink
+          self.imagebackground = this.movie.imagebackgroundlink
         })
         .catch((error) => {
-          console.log(error);
+          console.log(error)
         })
     },
     /**
@@ -314,34 +339,34 @@ export default {
      * Author: DTSang(28/09)
      */
     createImage(typeImage, file) {
-      const reader = new FileReader();
-      const self = this;
+      const reader = new FileReader()
+      const self = this
       reader.onload = (e) => {
         if (typeImage === 'imagelink') {
-          self.image = e.target.result;
+          self.image = e.target.result
         } else {
-          self.imagebackground = e.target.result;
+          self.imagebackground = e.target.result
         }
       }
       if (file) {
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(file)
       }
-      this.movie[typeImage] = file;
+      this.movie[typeImage] = file
     },
     /**
      * Hàm bắt sự kiện click xóa phim
      * Author: DTSang(22/10)
      */
     deleteFilm(id) {
-      this.idMovie = id;
-      this.dialogDelete = true;
+      this.idMovie = id
+      this.dialogDelete = true
     },
     /**
      * Hàm bắt dswuj kiện comfirm xóa phim
      * Author: DTSang(22/10)
      */
     deleteItemConfirm() {
-      const self = this;
+      const self = this
       axios
         .delete(`${process.env.baseUrl}/deletemovie/${self.idMovie}`, {
           headers: {
@@ -351,34 +376,34 @@ export default {
           },
         })
         .then(() => {
-          
+          this.initialize()
         })
         .catch((error) => {
-          console.log(error);
+          console.log(error)
         })
-      this.closeDelete();
+      this.closeDelete()
     },
     /**
      * Hàm bắt sự kiện click vào nút đóng dialog
      * Author: DTSang(22/10)
      */
     close() {
-      this.dialog = false;
+      this.dialog = false
       this.$nextTick(() => {
-        this.movie = {};
-        this.editedIndex = -1;
-        this.image = '';
-        this.imagebackground = '';
-        this.imagelink = '';
-        this.imagebackgroundlink = '';
-      });
+        this.movie = {}
+        this.editedIndex = -1
+        this.image = ''
+        this.imagebackground = ''
+        this.imagelink = ''
+        this.imagebackgroundlink = ''
+      })
     },
     /**
      * HÀm bắt sự kiện khi click đóng cảnh báo xóa
      * Author: DTSang(22/10)
      */
     closeDelete() {
-      this.dialogDelete = false;
+      this.dialogDelete = false
       // this.$nextTick(() => {
       //   this.editedItem = Object.assign({}, this.defaultItem)
       //   this.editedIndex = -1
@@ -389,36 +414,36 @@ export default {
      * Author: DTSang(22/10)
      */
     save() {
-      const formData = new FormData();
-      formData.append('movienamevn', this.movie.movienamevn);
-      formData.append('moviename', this.movie.moviename);
-      formData.append('year', this.movie.year);
-      formData.append('timeduration', this.movie.timeduration);
+      const formData = new FormData()
+      formData.append('movienamevn', this.movie.movienamevn)
+      formData.append('moviename', this.movie.moviename)
+      formData.append('year', this.movie.year)
+      formData.append('timeduration', this.movie.timeduration)
       formData.append(
         'director',
         (this.movie.director =
           this.movie.director == null ? '' : this.movie.director)
-      );
-      formData.append('national', this.movie.national);
-      formData.append('movielink', this.movie.movielink);
-      formData.append('trailerlink', this.movie.trailerlink);
-      const actorsArr = this.movie.actors;
+      )
+      formData.append('national', this.movie.national)
+      formData.append('movielink', this.movie.movielink)
+      formData.append('trailerlink', this.movie.trailerlink)
+      const actorsArr = this.movie.actors
       let actors = ''
       for (let i = 0; i < actorsArr.length; i++) {
         actors += actorsArr[i] + ','
-      };
-      formData.append('actors', actors.slice(0, -1));
-      const typeMovieArr = this.movie.typemovie;
+      }
+      formData.append('actors', actors.slice(0, -1))
+      const typeMovieArr = this.movie.typemovie
       let typeMovie = ''
       for (let i = 0; i < typeMovieArr.length; i++) {
         typeMovie += typeMovieArr[i] + ','
-      };
-      formData.append('typemovie', typeMovie.slice(0, -1));
-      formData.append('description', this.movie.description);
-      formData.append('image', this.movie.imagelink);
-      formData.append('imagebackground', this.movie.imagebackgroundlink);
-      console.log(this.movie);
-      console.log(formData);
+      }
+      formData.append('typemovie', typeMovie.slice(0, -1))
+      formData.append('description', this.movie.description)
+      formData.append('image', this.movie.imagelink)
+      formData.append('imagebackground', this.movie.imagebackgroundlink)
+      console.log(this.movie)
+      console.log(formData)
       if (this.editedIndex === -1) {
         axios
           .post(`${process.env.baseUrl}/createmovie`, formData, {
@@ -428,14 +453,9 @@ export default {
               token: this.token, // eslint-disable-line
             },
           })
-          .then((response) => {
-            self.$toast(response.data.message, {
-              timeout: 2000,
-            })
-            self.$emit('reload')
-          })
+          .then((response) => {})
           .catch((error) => {
-            console.log(error);
+            console.log(error)
           })
       } else {
         axios
@@ -446,29 +466,28 @@ export default {
               token: this.token, // eslint-disable-line
             },
           })
-          .then((response) => {
-            this.close();
-          })
+          .then((response) => {})
           .catch((error) => {
-            console.log(error);
+            console.log(error)
           })
       }
-      this.close();
+      this.initialize()
+      this.close()
     },
     /**
      * Tìm kiếm phimg theo key word
      * Author: DTSang(28/09)
      */
-    findMovie(data) {
-      const self = this;
+    findMovie() {
+      const self = this
       axios
-        .get(`${process.env.baseUrl}/findmovie?key=${data}`)
+        .get(`${process.env.baseUrl}/findmovie?key=${self.keyword}`)
         .then((response) => {
-          self.movies = response.data;
+          self.movies = response.data
         })
         .catch((error) => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
   },
 }

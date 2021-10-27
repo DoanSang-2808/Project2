@@ -3,15 +3,27 @@
     <div class="watch-movie-wrapper">
       <div class="watch-movie">
         <video
-         class="mb-4"
+          class="mb-4"
           width="100%"
           controls
           src="https://dl125.ukaritama.xyz/download?file=YmRhMTc5MzE0YWUwNjM2NjczZDAwNTRiN2U0YWRhYmFiYWRmYTQ5ZjY0NGJjMDlkNmQwMTc1NmEyYWVlODE3Nl8xMDgwcC5tcDTimK95Mm1ldGEuY29tLUtpbiBvZiB0aGUgU3RhaW5lZCBCbGFkZSB8IFNwaXJpdCBCbG9zc29tIDIwMjAgQ2luZW1hdGljIC0gTGVhZ3VlIG9mIExlZ2VuZHPimK8xMDgwcA"
         ></video>
-        <h1 class="name-movie">{{movie.moviename}}</h1>
-        <h3 class="sub-mane-movie"> {{movie.movienamevn}} <span>({{movie.year}})</span></h3>
+        <h1 class="name-movie">{{ movie.moviename }}</h1>
+        <h3 class="sub-mane-movie">
+          {{ movie.movienamevn }} <span>({{ movie.year }})</span>
+        </h3>
+        <v-rating
+          background-color="grey lighten-2"
+          color="warning"
+          half-increments
+          hover
+          length="5"
+          size="25"
+          :value="2.5"
+          readonly
+        ></v-rating>
         <div class="description-movie">
-          {{movie.description}}
+          {{ movie.description }}
         </div>
       </div>
     </div>
@@ -23,21 +35,20 @@
           data-width="100%"
           data-numposts="10"
         ></div>
-
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from 'axios'
 export default {
   middleware: 'watching',
   async asyncData({ params }) {
     const response = await axios.get(
       `${process.env.baseUrl}/getmovie/${params.id}`
-    );
-    return { movie: response.data };
+    )
+    return { movie: response.data }
   },
   data() {
     return {
@@ -46,10 +57,10 @@ export default {
     }
   },
   created() {
-    this.loadMovie();
+    this.loadMovie()
   },
   mounted() {
-    window.FB.XFBML.parse();
+    window.FB.XFBML.parse()
   },
   methods: {
     /**
@@ -62,10 +73,10 @@ export default {
         axios
           .get(`${process.env.VUE_APP_ROOT_API}/getmovie/${this.id}`)
           .then((response) => {
-            self.movie = response.data;
+            self.movie = response.data
           })
           .catch((error) => {
-            console.log(error);
+            console.log(error)
           })
       }
     },
