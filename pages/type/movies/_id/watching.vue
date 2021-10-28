@@ -13,14 +13,14 @@
           {{ movie.movienamevn }} <span>({{ movie.year }})</span>
         </h3>
         <v-rating
+          v-model="rateMovie"
           background-color="grey lighten-2"
           color="warning"
           half-increments
           hover
           length="5"
           size="25"
-          :value="2.5"
-          readonly
+          :readonly="readonly"
         ></v-rating>
         <div class="description-movie">
           {{ movie.description }}
@@ -37,6 +37,20 @@
         ></div>
       </div>
     </div>
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="timeout"
+      :color="color"
+      :right="msg_position"
+    >
+      {{ textSnackbar }}
+
+      <template #action="{ attrs }">
+        <v-btn color="white" text v-bind="attrs" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -45,19 +59,71 @@ import axios from 'axios'
 export default {
   middleware: 'watching',
   async asyncData({ params }) {
-    const response = await axios.get(
+    const responseMovie = await axios.get(
       `${process.env.baseUrl}/getmovie/${params.id}`
     )
-    return { movie: response.data }
+    const responseRate = await axios.get(
+      `${process.env.baseUrl}/getratebymovie/${params.id}`
+    )
+    const id = params.id
+    return {
+      movie: responseMovie.data,
+      rates: responseRate.data,
+      idMovie: id,
+    }
   },
   data() {
     return {
       movie: {},
+      user: this.$cookies.get('Account').id,
+      rateMovie: 0,
+      readonly: true,
+      token: this.$cookies.get('Account').token,
+      snackbar: false,
+      textSnackbar: '',
+      color: '',
+      msg_position: true,
+      timeout: 2000,
       host: process.env.VUE_APP_ROOT_API,
     }
   },
+  watch: {
+    rateMovie() {
+      if (this.readonly === false) {
+        const value = {
+          rate: this.rateMovie,
+          user: this.user,
+          movie: this.idMovie,
+        }
+        const self = this;
+        axios({
+          method: 'post',
+          url: `${process.env.baseUrl}/createrate`,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            token: self.token, // eslint-disable-line
+          },
+          data: value,
+        })
+          .then((response) => {
+            self.readonly = true;
+            self.snackbar = true;
+            self.textSnackbar = response.data.message;
+            self.color = '#43A047';
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+      }
+    },
+  },
   created() {
     this.loadMovie()
+    this.getRate()
+    if (this.rateMovie === 0) {
+      this.readonly = false
+    }
   },
   mounted() {
     window.FB.XFBML.parse()
@@ -78,6 +144,19 @@ export default {
           .catch((error) => {
             console.log(error)
           })
+      }
+    },
+    /**
+     * Lấy về đánh giá của phim đánh giá bởi tài khoản hiện tại
+     * Author: DTSang(27/10)
+     */
+    getRate() {
+      const listRate = this.rates
+      if (listRate !== null) {
+        this.rateMovie =
+          listRate.find((el) => el.user === this.user) === undefined
+            ? 0
+            : listRate.find((el) => el.user === this.user).rate
       }
     },
   },

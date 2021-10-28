@@ -4,17 +4,17 @@
       <div class="d-flex w-full h-11 align-center nav-item">
         <div class="w-1 h-full"></div>
         <v-icon class="ml-6 mr-4">fas fa-th</v-icon>
-        <p class="mb-0">Trang chủ</p>
+        <p class="mb-0">{{$t('nav.home')}}</p>
       </div>
       <div class="d-flex w-full h-11 align-center active nav-item">
         <div class="w-1 h-full"></div>
         <v-icon class="ml-6 mr-4">fas fa-film</v-icon>
-        <p class="mb-0">Movie</p>
+        <p class="mb-0">{{$t('nav.movie')}}</p>
       </div>
     </div>
     <div class="main w-4/5 pl-3">
       <div class="pt-4 right-0 main-add d-flex flex-row-reverse">
-        <Button text="Thêm phim mới" @btnOnclick="addFilm()" />
+        <Button :text="$t('button.newmovie')" @btnOnclick="addFilm()" />
       </div>
       <div class="bg-gray-600 main-table pt-4 p-2 pr-2">
         <div class="" style="height: 10%">
@@ -26,9 +26,6 @@
               class="outline-none w-full"
             />
           </div>
-          <!-- <div class="border p-1">
-            <v-icon>fas fa-sync</v-icon>
-          </div> -->
         </div>
         <div style="height: 90%">
           <v-data-table
@@ -216,17 +213,17 @@ export default {
       dialogDelete: false,
       headers: [
         {
-          text: 'Tên phim',
+          text: this.$t('header.name'),
           align: 'start',
           value: 'moviename',
         },
-        { text: 'Năm', value: 'year' },
-        { text: 'Thời lượng', value: 'timeduration' },
-        { text: 'Quốc gia', value: 'national' },
-        { text: 'Thể loại', value: 'typemovie' },
-        { text: 'Đạo diễn', value: 'director' },
-        { text: 'Diễn viên', value: 'actors' },
-        { text: 'Actions', value: 'actions' },
+        { text: this.$t('header.year'), value: 'year' },
+        { text: this.$t('header.time'), value: 'timeduration' },
+        { text: this.$t('header.national'), value: 'national' },
+        { text: this.$t('header.type'), value: 'typemovie' },
+        { text: this.$t('header.director'), value: 'director' },
+        { text: this.$t('header.actors'), value: 'actors' },
+        { text: this.$t('header.actions'), value: 'actions' },
       ],
       movies: [],
       editedIndex: -1,
@@ -446,7 +443,7 @@ export default {
       console.log(formData)
       if (this.editedIndex === -1) {
         axios
-          .post(`${process.env.baseUrl}/createmovie`, formData, {
+          .post(`${process.env.baseUrl}/createmovie`, formData, { 
             headers: {
               'Content-Type': 'multipart/form-data',
               'Access-Control-Allow-Origin': '*',
