@@ -10,12 +10,13 @@ export default {
         "logout": "Log Out",
         "register": "Resgister",
         "clear": "Clear",
-        "newmovie": "New Movie"
+        "newmovie": "New Movie",
+        "watch": "Watching"
     },
     "header": {
         "name": "Name",
         "year": "Year",
-        "time": "TIme",
+        "time": "Time",
         "national": "National",
         "type": "Type",
         "director": "Director",

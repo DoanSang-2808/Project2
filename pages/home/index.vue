@@ -1,55 +1,5 @@
 <template>
   <div class="w-full" style="width: 100%">
-    <!-- <div class="bg-gray-900 w-full rounded">
-      <v-container>
-        <v-row>
-          <v-col :cols="$vuetify.breakpoint.name == 'xs' ? '6 ' : '3'">
-            <p>Thể loại</p>
-            <v-hover>
-              <v-autocomplete
-                v-model="typeMovie"
-                :items="typeMovies"
-                dense
-                filled
-              ></v-autocomplete>
-            </v-hover>
-          </v-col>
-          <v-col :cols="$vuetify.breakpoint.name == 'xs' ? '6 ' : '3'">
-            <p>Quốc gia</p>
-            <v-hover>
-              <v-autocomplete
-                v-model="nationalMovie"
-                :items="nationalMovies"
-                dense
-                filled
-              ></v-autocomplete>
-            </v-hover>
-          </v-col>
-          <v-col :cols="$vuetify.breakpoint.name == 'xs' ? '6 ' : '3'">
-            <p>Năm</p>
-            <v-hover>
-              <v-autocomplete
-                v-model="year"
-                :items="years"
-                dense
-                filled
-              ></v-autocomplete>
-            </v-hover>
-          </v-col>
-          <v-col :cols="$vuetify.breakpoint.name == 'xs' ? '6 ' : '3'">
-            <p>Sắp xếp</p>
-            <v-hover>
-              <v-autocomplete
-                v-model="sort"
-                :items="sorts"
-                dense
-                filled
-              ></v-autocomplete>
-            </v-hover>
-          </v-col>
-        </v-row>
-      </v-container>
-    </div> -->
     <div class="new-movie mt-8">
       <p class="uppercase font-medium text-2xl text-yellow-500">
         Phim mới cập nhật
@@ -128,10 +78,6 @@ import axios from 'axios'
 export default {
   middleware: 'home',
   async asyncData() {
-    const typeMovie = await axios.get(`${process.env.baseUrl}/gettypemovie`)
-    const nationalMovie = await axios.get(
-      `${process.env.baseUrl}/getnationalmovie`
-    )
     const movies = await axios.get(`${process.env.baseUrl}/filter`, {
       params: {
         pageIndex: 1,
@@ -140,19 +86,11 @@ export default {
     })
     const sortByDate = await axios.get(`${process.env.baseUrl}/sortmovie`)
     return {
-      typeMovies: typeMovie.data,
-      nationalMovies: nationalMovie.data,
       movies: movies.data.movies,
       sortMovies: sortByDate.data,
     }
   },
   data: () => ({
-    years: ['2021', '2020', '2019', '2018', '2017', '2016'],
-    year: '',
-    sorts: ['Ngày cập nhật', 'Ngày phát hành', 'Điểm đánh giá'],
-    sort: '',
-    nationalMovie: '',
-    typeMovie: '',
   }),
   methods: {
     /**

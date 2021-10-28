@@ -3,10 +3,11 @@
     <div class="watch-movie-wrapper">
       <div class="watch-movie">
         <video
+          ref="myvideo"
           class="mb-4"
           width="100%"
           controls
-          src="https://dl125.ukaritama.xyz/download?file=YmRhMTc5MzE0YWUwNjM2NjczZDAwNTRiN2U0YWRhYmFiYWRmYTQ5ZjY0NGJjMDlkNmQwMTc1NmEyYWVlODE3Nl8xMDgwcC5tcDTimK95Mm1ldGEuY29tLUtpbiBvZiB0aGUgU3RhaW5lZCBCbGFkZSB8IFNwaXJpdCBCbG9zc29tIDIwMjAgQ2luZW1hdGljIC0gTGVhZ3VlIG9mIExlZ2VuZHPimK8xMDgwcA"
+          src="https://www.googleapis.com/drive/v3/files/12H41M5wQQAVOS4bZ7QfIEv-SWGbf81rh?key=AIzaSyAR2pX0DsiQXppxQnq4N_qWxg1ND6D6wjQ&alt=media"
         ></video>
         <h1 class="name-movie">{{ movie.moviename }}</h1>
         <h3 class="sub-mane-movie">
@@ -119,33 +120,15 @@ export default {
     },
   },
   created() {
-    this.loadMovie()
     this.getRate()
     if (this.rateMovie === 0) {
       this.readonly = false
-    }
+    };
   },
   mounted() {
-    window.FB.XFBML.parse()
+    window.FB.XFBML.parse();
   },
   methods: {
-    /**
-     * Hàm lấy dữ liệu của 1 phim
-     * Author: DTSang(23/09)
-     */
-    loadMovie() {
-      const self = this
-      if (this.id !== undefined) {
-        axios
-          .get(`${process.env.VUE_APP_ROOT_API}/getmovie/${this.id}`)
-          .then((response) => {
-            self.movie = response.data
-          })
-          .catch((error) => {
-            console.log(error)
-          })
-      }
-    },
     /**
      * Lấy về đánh giá của phim đánh giá bởi tài khoản hiện tại
      * Author: DTSang(27/10)
