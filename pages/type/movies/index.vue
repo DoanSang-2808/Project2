@@ -144,8 +144,6 @@ export default {
           },
         })
         .then((response) => {
-          // self.totalMovie = response.data.totalMovie
-          // self.totalPage = response.data.totalPage
           self.movies = response.data.movies;
           self.totalPage = response.data.totalPage;
         })

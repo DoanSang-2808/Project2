@@ -18,7 +18,7 @@
               contain
             ></v-img>
             <div class="d-flex justify-center">
-              <Button text="Xem phim" @btnOnclick="btnWatchingOnclick(movie._id)" />
+              <Button :text=" $t('button.watch') " @btnOnclick="btnWatchingOnclick(movie._id)" />
             </div>
           </v-col>
           <v-col class="pt-8" :cols="$vuetify.breakpoint.name == 'xs' ? 12 : 9">
@@ -139,7 +139,7 @@ export default {
       this.showVideo = true
     },
     /**
-     *Hàm bắt sựu kiện khi button xem phim được click
+     *Hàm bắt sự kiện khi button xem phim được click
      Author: DTSang(27/10)
      */
     btnWatchingOnclick(idMovie) {

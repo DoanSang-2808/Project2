@@ -10,7 +10,8 @@ export default {
         "logout": "Đăng xuất",
         "register": "Đăng kí",
         "clear": "Xóa",
-        "newmovie": "Thêm phim mới"
+        "newmovie": "Thêm phim mới",
+        "watch": "Xem phim"
     },
     "header": {
         "name": "Tên phim",

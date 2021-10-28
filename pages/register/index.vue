@@ -192,7 +192,7 @@ export default {
       this.$refs.observer.reset()
     },
     /**
-     * Hàm định dạng hiển thị của Ngày sinh
+     * Hàm định dạng hiển thị ngày: dd/mm/yyyy
      * Author; DTSang(25/10)
      */
     formatDate(date) {

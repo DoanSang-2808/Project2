@@ -4,12 +4,12 @@
       <div class="d-flex w-full h-11 align-center nav-item">
         <div class="w-1 h-full"></div>
         <v-icon class="ml-6 mr-4">fas fa-th</v-icon>
-        <p class="mb-0">{{$t('nav.home')}}</p>
+        <p class="mb-0">{{ $t('nav.home') }}</p>
       </div>
       <div class="d-flex w-full h-11 align-center active nav-item">
         <div class="w-1 h-full"></div>
         <v-icon class="ml-6 mr-4">fas fa-film</v-icon>
-        <p class="mb-0">{{$t('nav.movie')}}</p>
+        <p class="mb-0">{{ $t('nav.movie') }}</p>
       </div>
     </div>
     <div class="main w-4/5 pl-3">
@@ -160,7 +160,7 @@
               <v-dialog v-model="dialogDelete" max-width="500px">
                 <v-card>
                   <v-card-title class="text-h5"
-                    >Are you sure you want to delete this item?</v-card-title
+                    >Are you sure you want to delete this film?</v-card-title
                   >
                   <v-card-actions>
                     <v-spacer></v-spacer>
@@ -188,6 +188,20 @@
         </div>
       </div>
     </div>
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="timeout"
+      :color="color"
+      :right="msg_position"
+    >
+      {{ textSnackbar }}
+
+      <template #action="{ attrs }">
+        <v-btn color="white" text v-bind="attrs" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -209,33 +223,38 @@ export default {
   },
   data() {
     return {
-      dialog: false,
-      dialogDelete: false,
+      dialog: false, // xác nhận đóng mở dialog form detail
+      dialogDelete: false, // xác nhận dóng mở dialog cảnh báo xóa
       headers: [
         {
           text: this.$t('header.name'),
           align: 'start',
           value: 'moviename',
         },
-        { text: this.$t('header.year'), value: 'year' },
-        { text: this.$t('header.time'), value: 'timeduration' },
-        { text: this.$t('header.national'), value: 'national' },
+        { text: this.$t('header.year'), value: 'year', width: 100 },
+        { text: this.$t('header.time'), value: 'timeduration', width: 100 },
+        { text: this.$t('header.national'), value: 'national', width: 100 },
         { text: this.$t('header.type'), value: 'typemovie' },
         { text: this.$t('header.director'), value: 'director' },
         { text: this.$t('header.actors'), value: 'actors' },
-        { text: this.$t('header.actions'), value: 'actions' },
+        { text: this.$t('header.actions'), value: 'actions', width: 100 },
       ],
-      movies: [],
-      editedIndex: -1,
+      movies: [], // danh sách phim
+      editedIndex: -1, // Trạng thái của dialog form detail
       years: ['2021', '2020', '2019', '2018', '2017', '2016'],
-      movie: {},
-      idMovie: '',
-      imagelink: '',
-      image: '',
+      movie: {}, // object 1 phim
+      idMovie: '', // id của bộ phim
+      imagelink: '', // đường dẫn ảnh đọc từ input
+      image: '', // đường dẫn ảnh hiển thị preview
       imagebackgroundlink: '',
       imagebackground: '',
-      token: this.$cookies.get('Account').token,
-      keyword: '',
+      token: this.$cookies.get('Account').token, 
+      keyword: '', // giá trị input ô tìm kiếm phim
+      snackbar: false, // xác định đóng mở snackbar 
+      textSnackbar: '',
+      color: '',
+      msg_position: true,
+      timeout: 2000,
     }
   },
 
@@ -275,13 +294,12 @@ export default {
       }
     },
   },
-
   created() {
     this.initialize()
   },
   methods: {
     /**
-     * Hàm khở tạo dữ liệu loadMovie
+     * Hàm khởi tạo dữ liệu loadMovie
      * Author: DTSang(25/10)
      */
     initialize() {
@@ -359,7 +377,7 @@ export default {
       this.dialogDelete = true
     },
     /**
-     * Hàm bắt dswuj kiện comfirm xóa phim
+     * Hàm bắt sự kiện comfirm xóa phim
      * Author: DTSang(22/10)
      */
     deleteItemConfirm() {
@@ -373,7 +391,10 @@ export default {
           },
         })
         .then(() => {
-          this.initialize()
+          self.initialize()
+          self.snackbar = true
+          self.textSnackbar = 'Thêm phim mới thành công '
+          self.color = '#43A047'
         })
         .catch((error) => {
           console.log(error)
@@ -381,7 +402,7 @@ export default {
       this.closeDelete()
     },
     /**
-     * Hàm bắt sự kiện click vào nút đóng dialog
+     * Hàm bắt sự kiện click vào nút đóng dialog form
      * Author: DTSang(22/10)
      */
     close() {
@@ -401,10 +422,6 @@ export default {
      */
     closeDelete() {
       this.dialogDelete = false
-      // this.$nextTick(() => {
-      //   this.editedItem = Object.assign({}, this.defaultItem)
-      //   this.editedIndex = -1
-      // })
     },
     /**
      * Hàm băt du kiện click vào nút lưu
@@ -439,18 +456,23 @@ export default {
       formData.append('description', this.movie.description)
       formData.append('image', this.movie.imagelink)
       formData.append('imagebackground', this.movie.imagebackgroundlink)
-      console.log(this.movie)
-      console.log(formData)
+      const self = this
       if (this.editedIndex === -1) {
         axios
-          .post(`${process.env.baseUrl}/createmovie`, formData, { 
+          .post(`${process.env.baseUrl}/createmovie`, formData, {
             headers: {
               'Content-Type': 'multipart/form-data',
               'Access-Control-Allow-Origin': '*',
-              token: this.token, // eslint-disable-line
+              token: self.token, // eslint-disable-line
             },
           })
-          .then((response) => {})
+          .then((response) => {
+            self.initialize()
+            self.close()
+            self.snackbar = true
+            self.textSnackbar = 'Thêm phim mới thành công '
+            self.color = '#43A047'
+          })
           .catch((error) => {
             console.log(error)
           })
@@ -460,16 +482,20 @@ export default {
             headers: {
               'Content-Type': 'multipart/form-data',
               'Access-Control-Allow-Origin': '*',
-              token: this.token, // eslint-disable-line
+              token: self.token, // eslint-disable-line
             },
           })
-          .then((response) => {})
+          .then((response) => {
+            self.initialize()
+            self.close()
+            self.snackbar = true
+            self.textSnackbar = 'Sửa phim thành công '
+            self.color = '#43A047'
+          })
           .catch((error) => {
             console.log(error)
           })
       }
-      this.initialize()
-      this.close()
     },
     /**
      * Tìm kiếm phimg theo key word

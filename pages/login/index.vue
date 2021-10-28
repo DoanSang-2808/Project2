@@ -33,7 +33,6 @@
             <v-checkbox
               v-model="checkbox"
               :error-messages="errors"
-              value="1"
               label="Ghi nhớ tôi"
               type="checkbox"
               required
@@ -129,7 +128,7 @@ export default {
           self.snackbar = true;
           self.textSnackbar = 'Đăng nhập thành công';
           self.color = '#43A047';
-          this.changeRmbLogin();
+          self.changeRmbLogin();
           const account = {
             email: response.data.email,
             username: response.data.username,
@@ -138,8 +137,8 @@ export default {
             token: response.data.token,
             dob: response.data.dob,
           };
-          this.$cookies.set('Account', account);
-          this.changeIsLogin();
+          self.$cookies.set('Account', account);
+          self.changeIsLogin();
           if (response.data.role === 'guest') {
             self.$router.push({ path: "/home"});
           } else {

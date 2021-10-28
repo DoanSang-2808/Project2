@@ -1,7 +1,6 @@
 <template>
   <v-app dark>
     <v-app-bar
-      :clipped-left="clipped"
       fixed
       app
       class="purple darken-2"
@@ -30,7 +29,7 @@
                     </v-icon>
                   </template>
 
-                  <v-list theme-light>
+                  <v-list >
                     <v-list-item>
                       <NuxtLink to="/search">
                         <v-list-item-title class="text-white">
@@ -76,7 +75,15 @@
                   <img src="../assets/img/logo-full.png" />
                 </NuxtLink>
               </v-col>
-              <v-col cols="3" class="d-flex align-center h-full hidden">
+              <v-col
+                cols="3"
+                class="d-flex align-center h-full hidden"
+                :class="{
+                  show:
+                    $cookies.get('Account') !== undefined &&
+                    $cookies.get('Account').role === 'admin',
+                }"
+              >
                 <NuxtLink to="/search" class="d-flex align-center item-hover">
                   <v-icon color="grey lighten-5" class="icon">
                     fas fa-search
@@ -87,6 +94,11 @@
               <v-col
                 cols="2"
                 class="d-flex align-center item-hover hidden h-full"
+                :class="{
+                  show:
+                    $cookies.get('Account') !== undefined &&
+                    $cookies.get('Account').role === 'admin',
+                }"
               >
                 <NuxtLink to="/home">
                   <p class="mb-0 text-white">{{ $t('nav.home') }}</p>
@@ -95,13 +107,21 @@
               <v-col
                 cols="2"
                 class="d-flex align-center item-hover hidden h-full"
+                :class="{
+                  show:
+                    $cookies.get('Account') !== undefined &&
+                    $cookies.get('Account').role === 'admin',
+                }"
                 ><NuxtLink to="/type/movies"
                   ><p class="mb-0 text-white">
                     {{ $t('nav.movie') }}
                   </p></NuxtLink
                 ></v-col
               >
-              <v-col cols="2" class="d-flex align-center hidden h-full">
+              <v-col
+                cols="2"
+                class="d-flex align-center hidden h-full"
+              >
                 <v-switch
                   v-model="lang"
                   class="d-flex justify-center align-center"
@@ -123,7 +143,9 @@
           >
             <Button
               :text="
-                $store.getters.getIsLogin !== true ? $t('button.login') : $t('button.logout')
+                $store.getters.getIsLogin !== true
+                  ? $t('button.login')
+                  : $t('button.logout')
               "
               :textIcon="
                 $store.getters.getIsLogin !== true
@@ -155,13 +177,17 @@ export default {
   components: { Button },
   data() {
     return {
-      clipped: false,
       fixed: false,
       closeOnClick: false,
       lang: false,
+      isShow: this.show,
     }
   },
   watch: {
+    /**
+     * Lắng nghe sự thay đổi cả lang
+     * Author: DTSang(28/10)
+     */
     lang() {
       this.$i18n.locale = this.lang === true ? 'vi' : 'en'
     },
@@ -217,6 +243,9 @@ export default {
   font-size: 15px;
 }
 .menu {
+  display: none !important;
+}
+.show {
   display: none !important;
 }
 @media only screen and (max-width: 680px) {
