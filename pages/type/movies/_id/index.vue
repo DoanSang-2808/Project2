@@ -18,15 +18,7 @@
               contain
             ></v-img>
             <div class="d-flex justify-center">
-              <Button
-                text="Xem phim"
-                @btnOnclick="
-                  $router.push({
-                    path: `/type/movies/${movie._id}/watching`,
-                    params: { id: movie._id },
-                  })
-                "
-              />
+              <Button text="Xem phim" @btnOnclick="btnWatchingOnclick(movie._id)" />
             </div>
           </v-col>
           <v-col class="pt-8" :cols="$vuetify.breakpoint.name == 'xs' ? 12 : 9">
@@ -46,7 +38,7 @@
               hover
               length="5"
               size="25"
-              value="2.5"
+              :value="rate"
               readonly
             ></v-rating>
             <div class="d-flex mb-12">
@@ -122,10 +114,16 @@ export default {
   components: { Button },
   middleware: 'type-movie-id',
   async asyncData({ params }) {
-    const response = await axios.get(
+    const responseMovie = await axios.get(
       `${process.env.baseUrl}/getmovie/${params.id}`
-    )
-    return { movie: response.data }
+    );
+    const responseRate = await axios.get(
+      `${process.env.baseUrl}/getrateavgbymovie/${params.id}`
+    );
+    return {
+      movie: responseMovie.data,
+      rate: responseRate.data.avg,
+    };
   },
   data() {
     return {
@@ -139,6 +137,20 @@ export default {
      */
     playTrailerVideo() {
       this.showVideo = true
+    },
+    /**
+     *Hàm bắt sựu kiện khi button xem phim được click
+     Author: DTSang(27/10)
+     */
+    btnWatchingOnclick(idMovie) {
+      if (this.$cookies.get('Account') !== undefined) {
+        this.$router.push({
+          path: `/type/movies/${idMovie}/watching`,
+          params: { id: idMovie },
+        })
+      } else {
+        alert('Bạn cần đăng nhập để xem phim');
+      }
     },
   },
 }

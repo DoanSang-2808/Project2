@@ -4,7 +4,7 @@ export default{
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - project2',
-    title: 'project2',
+    title: 'Movie Web',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
